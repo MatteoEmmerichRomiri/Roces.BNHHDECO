@@ -186,14 +186,194 @@ Public Class CLEHHDECO
         End Try
     End Sub
 
+    Private Sub GestisciAggiornamentoConto(ByVal e As DataColumnChangeEventArgs, ByVal nomeCampoDescrizione As String)
+        Dim proposedValue As String = NTSCStr(e.ProposedValue)
+        Dim dttRecord As New DataTable
+        Dim strDescrConto As String = String.Empty
+
+        If Not oCldDeco.ValCodiceDb(proposedValue, strDittaCorrente, "ANAGRA", "S", strDescrConto, dttRecord) Then
+            ThrowRemoteEvent(New NTSEventArgs("", "Conto non esistente, verrà ripristinato quello precedente"))
+            e.ProposedValue = e.Row(e.Column.ColumnName)
+            Return
+        End If
+
+        If dttRecord Is Nothing OrElse dttRecord.Rows.Count <> 1 Then Return
+
+        Dim descrizione As String = NTSCStr(dttRecord.Rows(0)!an_descr1)
+        If descrizione <> String.Empty Then
+            e.Row(nomeCampoDescrizione) = descrizione
+        End If
+    End Sub
+
+    Public Overridable Sub BeforeColUpdate_de_contoprincipale(ByVal sender As Object, ByVal e As DataColumnChangeEventArgs)
+        Try
+            GestisciAggiornamentoConto(e, "de_descrcontoprincipale")
+        Catch ex As Exception
+            CLN__STD.GestErr(ex, Me, "")
+        End Try
+    End Sub
+
+    Public Overridable Sub BeforeColUpdate_de_contosecondario(ByVal sender As Object, ByVal e As DataColumnChangeEventArgs)
+        Try
+            GestisciAggiornamentoConto(e, "de_descrcontosecondario")
+        Catch ex As Exception
+            CLN__STD.GestErr(ex, Me, "")
+        End Try
+    End Sub
+
+
+    'Public Overridable Sub BeforeColUpdate_de_contoprincipale(ByVal sender As Object, ByVal e As DataColumnChangeEventArgs)
+    '    Try
+    '        Dim proposedContoPrincipale As String = NTSCStr(e.ProposedValue)
+    '        Dim dttRecord As New DataTable
+    '        Dim strDescrConto As String = String.Empty
+
+    '        If Not oCldDeco.ValCodiceDb(proposedContoPrincipale, strDittaCorrente, "ANAGRA", "S", strDescrConto, dttRecord) Then
+
+    '            ThrowRemoteEvent(New NTSEventArgs("", "Conto non esistente, verrà ripristinato quello precedente"))
+
+    '            e.ProposedValue = e.Row(e.Column.ColumnName)
+
+    '            Return
+
+    '        End If
+
+    '        If dttRecord Is Nothing OrElse dttRecord.Rows.Count <> 1 Then Return
+
+    '        If NTSCStr(dttRecord.Rows(0)!an_descr1) IsNot String.Empty Then
+
+    '            strDescrConto = NTSCStr(dttRecord.Rows(0)!an_descr1)
+
+    '            e.Row!de_descrcontoprincipale = strDescrConto
+
+    '        End If
+
+    '    Catch ex As Exception
+    '        '--------------------------------------------------------------
+
+    '        CLN__STD.GestErr(ex, Me, "")
+
+    '        '--------------------------------------------------------------
+    '    End Try
+    'End Sub
+
+    'Public Overridable Sub BeforeColUpdate_de_contosecondario(ByVal sender As Object, ByVal e As DataColumnChangeEventArgs)
+    '    Try
+    '        Dim proposedContoSecondario As String = NTSCStr(e.ProposedValue)
+    '        Dim dttRecord As New DataTable
+    '        Dim strDescrConto As String = String.Empty
+
+    '        If Not oCldDeco.ValCodiceDb(proposedContoSecondario, strDittaCorrente, "ANAGRA", "S", strDescrConto, dttRecord) Then
+
+    '            ThrowRemoteEvent(New NTSEventArgs("", "Conto non esistente, verrà ripristinato quello precedente"))
+
+    '            e.ProposedValue = e.Row(e.Column.ColumnName)
+
+    '            Return
+
+    '        End If
+
+    '        If dttRecord Is Nothing OrElse dttRecord.Rows.Count <> 1 Then Return
+
+    '        If NTSCStr(dttRecord.Rows(0)!an_descr1) IsNot String.Empty Then
+
+    '            strDescrConto = NTSCStr(dttRecord.Rows(0)!an_descr1)
+
+    '            e.Row!de_descrcontosecondario = strDescrConto
+
+    '        End If
+
+    '    Catch ex As Exception
+    '        '--------------------------------------------------------------
+
+    '        CLN__STD.GestErr(ex, Me, "")
+
+    '        '--------------------------------------------------------------
+    '    End Try
+    'End Sub
+
+    Private Sub ValidaDestinazioneConto(ByVal e As DataColumnChangeEventArgs, ByVal campoContoPadre As String)
+        Dim proposedDestinazione As String = NTSCStr(e.ProposedValue)
+        Dim strDescrConto As String = String.Empty
+
+        If Not oCldDeco.ValCodiceDb(proposedDestinazione, strDittaCorrente, "DESTDIV", "N", strDescrConto, Nothing, NTSCStr(e.Row(campoContoPadre))) Then
+            ThrowRemoteEvent(New NTSEventArgs("", "Destinazione non esistente, verrà ripristinato quello precedente"))
+            e.ProposedValue = e.Row(e.Column.ColumnName)
+        End If
+    End Sub
+
+
+    Public Overridable Sub BeforeColUpdate_de_destcontoprincipale(ByVal sender As Object, ByVal e As DataColumnChangeEventArgs)
+        Try
+            ValidaDestinazioneConto(e, "de_contoprincipale")
+        Catch ex As Exception
+            CLN__STD.GestErr(ex, Me, "")
+        End Try
+    End Sub
+
+    Public Overridable Sub BeforeColUpdate_de_destcontosecondario(ByVal sender As Object, ByVal e As DataColumnChangeEventArgs)
+        Try
+            ValidaDestinazioneConto(e, "de_contosecondario")
+        Catch ex As Exception
+            CLN__STD.GestErr(ex, Me, "")
+        End Try
+    End Sub
+
+
+    'Public Overridable Sub BeforeColUpdate_de_destcontoprincipale(ByVal sender As Object, ByVal e As DataColumnChangeEventArgs)
+    '    Try
+    '        Dim proposedDestinazione As String = NTSCStr(e.ProposedValue)
+    '        Dim dttRecord1 As New DataTable
+    '        Dim strDescrConto1 As String = String.Empty
+
+    '        If Not oCldDeco.ValCodiceDb(proposedDestinazione, strDittaCorrente, "DESTDIV", "N", strDescrConto1, Nothing, NTSCStr(e.Row!de_contoprincipale)) Then
+    '            ThrowRemoteEvent(New NTSEventArgs("", "Destinazione non esistente, verrà ripristinato quello precedente"))
+
+    '            e.ProposedValue = e.Row(e.Column.ColumnName)
+
+    '            Return
+    '        End If
+
+    '    Catch ex As Exception
+    '        '--------------------------------------------------------------
+
+    '        CLN__STD.GestErr(ex, Me, "")
+
+    '        '--------------------------------------------------------------
+    '    End Try
+    'End Sub
+
+    'Public Overridable Sub BeforeColUpdate_de_destcontosecondario(ByVal sender As Object, ByVal e As DataColumnChangeEventArgs)
+    '    Try
+    '        Dim proposedDestinazione As String = NTSCStr(e.ProposedValue)
+    '        Dim dttRecord1 As New DataTable
+    '        Dim strDescrConto1 As String = String.Empty
+
+    '        If Not oCldDeco.ValCodiceDb(proposedDestinazione, strDittaCorrente, "DESTDIV", "N", strDescrConto1, Nothing, NTSCStr(e.Row!de_contosecndario)) Then
+    '            ThrowRemoteEvent(New NTSEventArgs("", "Destinazione non esistente, verrà ripristinato quello precedente"))
+
+    '            e.ProposedValue = e.Row(e.Column.ColumnName)
+
+    '            Return
+    '        End If
+
+    '    Catch ex As Exception
+    '        '--------------------------------------------------------------
+
+    '        CLN__STD.GestErr(ex, Me, "")
+
+    '        '--------------------------------------------------------------
+    '    End Try
+    'End Sub
+
     Public Overridable Sub BeforeColUpdate_tb_codstato(ByVal sender As Object, ByVal e As DataColumnChangeEventArgs)
 
         Try
             'Dim strCodStato As String = NTSCStr(e.ProposedValue)
             'Dim dttRecord As New DataTable
-            'Dim strDescCodStato As String = ""
+            'Dim strDescrConto As String = ""
 
-            'If Not oCldDeco.ValCodiceDb(strCodStato, strDittaCorrente, "TABSTAT", "S", strDescCodStato, dttRecord) Then
+            'If Not oCldDeco.ValCodiceDb(strCodStato, strDittaCorrente, "TABSTAT", "S", strDescrConto, dttRecord) Then
 
             '    ThrowRemoteEvent(New NTSEventArgs("", "Codice stato non esistente, verrà ripristinato quello precedente"))
 
@@ -208,9 +388,9 @@ Public Class CLEHHDECO
 
             '        If NTSCStr(dttRecord.Rows(0)!tb_codstat) IsNot String.Empty Then
 
-            '            strDescCodStato = NTSCStr(dttRecord.Rows(0)!tb_codstat)
+            '            strDescrConto = NTSCStr(dttRecord.Rows(0)!tb_codstat)
 
-            '            e.Row!xx_descstato = strDescCodStato
+            '            e.Row!xx_descstato = strDescrConto
 
             '        End If
             '    End If
@@ -224,30 +404,14 @@ Public Class CLEHHDECO
 
         End Try
 
-
-
     End Sub
 
-    Public Overridable Function TestUbicaz(ByRef row As DataRow) As Boolean
-        Try
-            Dim sUbicaz As String = NTSCStr(row!au_ubicaz)
-
-            If String.IsNullOrEmpty(sUbicaz) Then
-                ThrowRemoteEvent(New NTSEventArgs("", "L'ubicazione è obbligatoria!"))
-                Return False
-            End If
-
-            If Not oCldDeco.CheckUbicazioneExists(sUbicaz, strDittaCorrente) Then
-                ThrowRemoteEvent(New NTSEventArgs("", "L'ubicazione inserita non è valida!"))
-                row!au_ubicaz = ""
-                Return False
-            End If
-
-            Return True
-
-        Catch ex As Exception
-            CLN__STD.GestErr(ex, Me, "")
-        End Try
+    Private Function VerificaCampoValore(Of T As IComparable)(valore As T, defaultValue As T, messaggioErrore As String, listaMessaggi As List(Of String)) As Boolean
+        If valore.CompareTo(defaultValue) = 0 Then
+            listaMessaggi.Add(messaggioErrore)
+            Return False
+        End If
+        Return True
     End Function
 
     Public Overrides Function TestPreSalva() As Boolean
@@ -269,42 +433,53 @@ Public Class CLEHHDECO
 
                 '----------------------------------------
 
-                Dim contoPrincipale As String = NTSCStr(row!de_contoprincipale)
+                If Not VerificaCampoValore(String.Empty, NTSCStr(row!de_contoprincipale), "Attenzione! Non hai inserito il conto principale.", listaMessaggiErrore) Then Return False
 
-                If contoPrincipale = String.Empty Then
-                    listaMessaggiErrore.Add("Attenzione! Non hai inserito il conto principale.")
-                    Return False
-                End If
+                If Not VerificaCampoValore(0, NTSCInt(row!de_destcontoprincipale), "Attenzione! Non hai inserito la destinazione del conto principale.", listaMessaggiErrore) Then Return False
 
-                Dim descrizioneSecondario As String = String.Empty
+                If Not VerificaCampoValore(String.Empty, NTSCStr(row!de_contosecondario), "Attenzione! Non hai inserito il conto secondario.", listaMessaggiErrore) Then Return False
 
-                'If Not ocldBase.ValCodiceDb(contoPrincipale, "REGINATO", "TABMARC", "S", descrizioneSecondario) Then
-                '    listaMessaggiErrore.Add("Attenzione! Codice marca inesistente.")
-                '    Return False
-                'End If
-
-                'row!xx_ = descrizioneSecondario
+                If Not VerificaCampoValore(0, NTSCInt(row!de_destcontosecondario), "Attenzione! Non hai inserito la destinazione del conto secondario.", listaMessaggiErrore) Then Return False
 
                 '----------------------------------------
 
-                Dim contoSecondario As String = NTSCStr(row!de_contosecondario)
+                'Dim contoPrincipale As String = NTSCStr(row!de_contoprincipale)
 
-                If contoSecondario = String.Empty Then
-                    listaMessaggiErrore.Add("Attenzione! Non hai inserito il conto secondario.")
-                    Return False
-                End If
-
-                Dim descrizionePrimario As String = String.Empty
-
-                'If Not ocldBase.ValCodiceDb(contoPrincipale, "REGINATO", "TABMARC", "S", descrizionePrimario) Then
-                '    listaMessaggiErrore.Add("Attenzione! Codice marca inesistente.")
+                'If contoPrincipale = String.Empty Then
+                '    listaMessaggiErrore.Add("Attenzione! Non hai inserito il conto principale.")
                 '    Return False
                 'End If
 
-                'row!xx_ = descrizionePrimario
+                ''----------------------------------------
 
-                '----------------------------------------
+                'Dim destcontoPrincipale As Integer = NTSCInt(row!de_destcontoprincipale)
 
+                'If destcontoPrincipale = 0 Then
+                '    listaMessaggiErrore.Add("Attenzione! Non hai inserito la destinazione del conto principale.")
+                '    Return False
+                'End If
+
+                ''----------------------------------------
+
+                ''----------------------------------------
+
+                'Dim contoSecondario As String = NTSCStr(row!de_contosecondario)
+
+                'If contoSecondario = String.Empty Then
+                '    listaMessaggiErrore.Add("Attenzione! Non hai inserito il conto secondario.")
+                '    Return False
+                'End If
+
+                ''----------------------------------------
+
+                'Dim destcontoSecondario As Integer = NTSCInt(row!de_destcontosecondario)
+
+                'If destcontoSecondario = 0 Then
+                '    listaMessaggiErrore.Add("Attenzione! Non hai inserito la destinazione del conto secondario.")
+                '    Return False
+                'End If
+
+                ''----------------------------------------
 
             Next
 

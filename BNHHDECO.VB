@@ -83,6 +83,8 @@ Public Class FRMHHDECO
     Friend WithEvents de_descrcontosecondario As NTSGridColumn
     Friend WithEvents codditt As NTSGridColumn
     Friend WithEvents de_descrcontoprincipale As NTSGridColumn
+    Friend WithEvents de_destcontoprincipale As NTSGridColumn
+    Friend WithEvents de_destcontosecondario As NTSGridColumn
     Public WithEvents grvDeco As NTSInformatica.NTSGridView
 
 #End Region
@@ -124,6 +126,7 @@ Public Class FRMHHDECO
     End Function
 
     Public Overridable Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FRMHHDECO))
         Me.NtsBarManager1 = New NTSInformatica.NTSBarManager()
         Me.tlbMain = New NTSInformatica.NTSBar()
@@ -148,6 +151,8 @@ Public Class FRMHHDECO
         Me.de_descrcontoprincipale = New NTSInformatica.NTSGridColumn()
         Me.de_contosecondario = New NTSInformatica.NTSGridColumn()
         Me.de_descrcontosecondario = New NTSInformatica.NTSGridColumn()
+        Me.de_destcontoprincipale = New NTSInformatica.NTSGridColumn()
+        Me.de_destcontosecondario = New NTSInformatica.NTSGridColumn()
         CType(Me.dttSmartArt, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NtsBarManager1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pnHhst, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -311,7 +316,7 @@ Public Class FRMHHDECO
         'grvDeco
         '
         Me.grvDeco.ActiveFilterEnabled = False
-        Me.grvDeco.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.codditt, Me.de_contoprincipale, Me.de_descrcontoprincipale, Me.de_contosecondario, Me.de_descrcontosecondario})
+        Me.grvDeco.Columns.AddRange(New DevExpress.XtraGrid.Columns.GridColumn() {Me.codditt, Me.de_contoprincipale, Me.de_destcontoprincipale, Me.de_descrcontoprincipale, Me.de_contosecondario, Me.de_destcontosecondario, Me.de_descrcontosecondario})
         Me.grvDeco.CustomizationFormBounds = New System.Drawing.Rectangle(680, 326, 208, 170)
         Me.grvDeco.Enabled = True
         Me.grvDeco.GridControl = Me.grDeco
@@ -363,7 +368,7 @@ Public Class FRMHHDECO
         Me.de_descrcontoprincipale.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText
         Me.de_descrcontoprincipale.Name = "de_descrcontoprincipale"
         Me.de_descrcontoprincipale.Visible = True
-        Me.de_descrcontoprincipale.VisibleIndex = 2
+        Me.de_descrcontoprincipale.VisibleIndex = 3
         '
         'de_contosecondario
         '
@@ -376,7 +381,7 @@ Public Class FRMHHDECO
         Me.de_contosecondario.Name = "de_contosecondario"
         Me.de_contosecondario.NTSSetparam___Tipo = NTSInformatica.NTSGridColumn.NTSSetparamTipoColonna.Numero
         Me.de_contosecondario.Visible = True
-        Me.de_contosecondario.VisibleIndex = 3
+        Me.de_contosecondario.VisibleIndex = 4
         '
         'de_descrcontosecondario
         '
@@ -388,7 +393,33 @@ Public Class FRMHHDECO
         Me.de_descrcontosecondario.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText
         Me.de_descrcontosecondario.Name = "de_descrcontosecondario"
         Me.de_descrcontosecondario.Visible = True
-        Me.de_descrcontosecondario.VisibleIndex = 4
+        Me.de_descrcontosecondario.VisibleIndex = 6
+        '
+        'de_destcontoprincipale
+        '
+        Me.de_destcontoprincipale.AppearanceCell.Options.UseBackColor = True
+        Me.de_destcontoprincipale.AppearanceCell.Options.UseTextOptions = True
+        Me.de_destcontoprincipale.AppearanceCell.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap
+        Me.de_destcontoprincipale.Caption = "Destinazione Conto Principale"
+        Me.de_destcontoprincipale.Enabled = True
+        Me.de_destcontoprincipale.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText
+        Me.de_destcontoprincipale.Name = "de_destcontoprincipale"
+        Me.de_destcontoprincipale.NTSSetparam___Tipo = NTSInformatica.NTSGridColumn.NTSSetparamTipoColonna.Numero
+        Me.de_destcontoprincipale.Visible = True
+        Me.de_destcontoprincipale.VisibleIndex = 2
+        '
+        'de_destcontosecondario
+        '
+        Me.de_destcontosecondario.AppearanceCell.Options.UseBackColor = True
+        Me.de_destcontosecondario.AppearanceCell.Options.UseTextOptions = True
+        Me.de_destcontosecondario.AppearanceCell.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap
+        Me.de_destcontosecondario.Caption = "Destinazione Conto Secondario"
+        Me.de_destcontosecondario.Enabled = True
+        Me.de_destcontosecondario.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText
+        Me.de_destcontosecondario.Name = "de_destcontosecondario"
+        Me.de_destcontosecondario.NTSSetparam___Tipo = NTSInformatica.NTSGridColumn.NTSSetparamTipoColonna.Numero
+        Me.de_destcontosecondario.Visible = True
+        Me.de_destcontosecondario.VisibleIndex = 5
         '
         'FRMHHDECO
         '
@@ -476,18 +507,6 @@ Public Class FRMHHDECO
             Dim currentRow As DataRow = grvDeco.NTSGetCurrentDataRow
             If currentRow Is Nothing Then Return False
 
-
-            If currentRow IsNot Nothing Then
-                Dim coddittValue As String = ""
-                If Not IsDBNull(currentRow!am_codmarca) Then
-                    coddittValue = currentRow!am_codmarca.ToString()
-                End If
-            End If
-
-            grvDeco.NTSAllowInsert = True
-
-            nuovaRiga = True
-
             Return True
 
         Catch ex As Exception
@@ -497,25 +516,6 @@ Public Class FRMHHDECO
 
     Public Overridable Sub grvDeco_NTSFocusedRowChanged(ByVal sender As Object, ByVal e As DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs) Handles grvDeco.NTSFocusedRowChanged
         Try
-
-            Dim testDebug As String = String.Empty
-
-            'Dim currentRow As DataRow = grvDeco.NTSGetCurrentDataRow
-            'If currentRow Is Nothing Then Return
-
-            'Select Case nuovaRiga
-            '    Case True
-            '        am_codmarca.Enabled = True
-            '        codditt.Enabled = True
-
-            '        nuovaRiga = False
-
-            '    Case False
-            '        If am_codmarca.Enabled Then am_codmarca.Enabled = False
-            '        If codditt.Enabled Then codditt.Enabled = False
-
-            'End Select
-
 
         Catch ex As Exception
             CLN__STD.GestErr(ex, Me, "")
@@ -538,6 +538,7 @@ Public Class FRMHHDECO
             '-------------------------------------------------
         End Try
     End Sub
+
 
 #End Region
 
@@ -579,29 +580,23 @@ Public Class FRMHHDECO
             codditt.Enabled = False
             codditt.Visible = False
 
-            ''Setto la colonna xx_descr
-            'xx_descr.NTSSetParamSTR(oMenu, "Descrizione Marca", 50) 'OBBLIGATORIO
-            'xx_descr.Enabled = False
-
-            'Setto la colonna am_codmarca
+            'Setto la colonna de_contoprincipale
             de_contoprincipale.NTSSetParamSTR(oMenu, "Conto Principale", 50) 'OBBLIGATORIO
-            'am_codmarca.Enabled = False
 
-            'Setto la colonna am_codmarcaweb
+            de_destcontoprincipale.NTSSetParamSTR(oMenu, "Destinazione Conto Principale", 50)
+
+            'Setto la colonna de_descrcontoprincipale
             de_descrcontoprincipale.NTSSetParamSTR(oMenu, "Descrizione Conto Principale", 50) 'OBBLIGATORIO
             de_descrcontoprincipale.Enabled = False
 
-            ''Setto la colonna am_descrmarcaweb
+            ''Setto la colonna de_contosecondario
             de_contosecondario.NTSSetParamSTR(oMenu, "Conto Secondario", 50) 'OBBLIGATORIO
 
-            ''Setto la colonna am_note
+            de_destcontosecondario.NTSSetParamSTR(oMenu, "Destinazione Conto Secondario", 50)
+
+            ''Setto la colonna de_descrcontosecondario
             de_descrcontosecondario.NTSSetParamSTR(oMenu, "Descrizione Conto Secondario", 50) 'OBBLIGATORIO
             de_descrcontosecondario.Enabled = False
-
-            ''Setto la colonna xx_ubicaz
-            'au_ubicaz.NTSSetParamSTR(oMenu, "Ubicaz", 50)
-
-            'au_ubicaz.NTSSetParamZoom("ZOOMANAUBIC")
 
             'Chiamo lo script per inizializzare i controlli caricati con Source Extender
             NTSScriptExec("InitControls", Me, Nothing)
@@ -616,10 +611,6 @@ Public Class FRMHHDECO
 
     Public Overridable Function Salva() As Boolean
         Try
-
-            'Dim currentRow As DataRow = grvDeco.NTSGetCurrentDataRow
-            'If currentRow Is Nothing Then Return False
-
             '----------------------------------------------------------------------------------------------------------
             Me.ValidaLastControl()
             '----------------------------------------------------------------------------------------------------------
@@ -646,7 +637,6 @@ Public Class FRMHHDECO
         Try
 
             If Not Salva() Then Return
-
 
             '--------------------------------------------------
             'Preparo il motore di stampa
